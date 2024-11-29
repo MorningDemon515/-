@@ -43,5 +43,6 @@
     <Library Include="..\SDL-release-2.30.6\build-64bit\Release\SDL2.lib" />
     <Library Include="..\SDL-release-2.30.6\build-64bit\Release\SDL2_test.lib" />
     <Library Include="..\SDL-release-2.30.6\build-64bit\Release\SDL2main.lib" />
+    <Library Include="..\freetype-VER-2-13-3\build-64bits\Release\freetype.lib" />
   </ItemGroup>
 </Project>
