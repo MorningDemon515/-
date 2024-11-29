@@ -19,7 +19,7 @@ public:
 
 	int Draw();
 
-	void RenderText( std::string text, GLfloat x, GLfloat y, GLfloat scale, glm::vec3 color);
+	void RenderText( std::wstring text, GLfloat x, GLfloat y, GLfloat scale, glm::vec3 color);
 
 private:
 	GLuint VAO, VBO,EBO,texture;
