@@ -2,47 +2,42 @@
 
 Graphics::Graphics(HWND hwnd)
 {
+    hh = hwnd;
+
     if (!gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress))
     {
-        MessageBoxW(hwnd,L"Failed to initialize GLAD",L"Engine Error!",MB_OK);
+        MessageBoxW(hh,L"Failed to initialize GLAD",L"Engine Error!",MB_OK);
     }
     else
     {
         std::cout << "GLAD!"<<std::endl;
     }
-
+    
     glViewport(0,0,WINDOW_WIDTH,WINDOW_HEIGHT);
 
 }
 
 Graphics::~Graphics()
 {
-
+    glDeleteVertexArrays(1, &VAO);
+    glDeleteBuffers(1, &VBO);
 }
 
 void Graphics::RenderText(std::wstring text, GLfloat x, GLfloat y, GLfloat scale, glm::vec3 color)
 {
-    // Set OpenGL options
-    glEnable(GL_CULL_FACE);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
+    
     // Compile and setup the shader
     ShaderFromFile shader("vertex.txt", "fragment.txt");
     glm::mat4 projection = glm::ortho(0.0f, static_cast<GLfloat>(WINDOW_WIDTH), 0.0f, static_cast<GLfloat>(WINDOW_HEIGHT));
     shader.Use();
     glUniformMatrix4fv(shader.GetShaderSourceUniform("projection"), 1, GL_FALSE, glm::value_ptr(projection));
 
-    // FreeType
-    FT_Library ft;
     // All functions return a value different than 0 whenever an error occurred
     if (FT_Init_FreeType(&ft))
-        std::cout << "ERROR::FREETYPE: Could not init FreeType Library" << std::endl;
+        MessageBoxW(hh, L"Could not init FreeType Library", L"Engine Error!", MB_OK);
 
-    // Load font as face
-    FT_Face face;
     if (FT_New_Face(ft, "C:/Windows/Fonts/simfang.ttf", 0, &face))
-        std::cout << "ERROR::FREETYPE: Failed to load font" << std::endl;
+        MessageBoxW(hh, L"Failed to load font", L"Engine Error!", MB_OK);
 
     // Set size to load glyphs as
     FT_Set_Pixel_Sizes(face, 0, 48);
@@ -147,13 +142,84 @@ void Graphics::RenderText(std::wstring text, GLfloat x, GLfloat y, GLfloat scale
 
 int  Graphics::Draw()
 {
-   
-    glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
-    RenderText(L"中文?", 200.0f, 200.0f, 1.0f, glm::vec3(0.5, 0.8f, 0.2f));
-    RenderText(L"Chinese?", 200.0f, 100.0f, 1.0f, glm::vec3(0.5, 0.8f, 0.2f));
+    // Set OpenGL options
+    glEnable(GL_CULL_FACE);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    while (SDL_PollEvent(&event))
+    {
+        switch (event.type)
+        {
+        case SDL_QUIT:
+            run = false;
+            break;
+
+        case SDL_MOUSEBUTTONDOWN:
+            if (event.button.button == SDL_BUTTON_LEFT)
+            {
+                int px = event.button.x;
+                int py = event.button.y;
+
+                int xx, yy, ww, hh;
+
+                xx = 640 - 30 - 90;
+                yy = 480 - 50;
+                ww = 100;
+                hh = 30;
+
+                if (px >= xx && px <= xx + ww && py >= yy && py <= yy + hh)
+                {
+                    run = false;
+                }
+                
+                
+            }
+            
+
+            break;
+
+        case SDL_KEYDOWN:
+
+            switch (event.key.keysym.sym)
+            {
+            case SDLK_ESCAPE:
+                run = false;
+                break;
+
+            case SDLK_w:
+
+                break;
+
+            default:
+                break;
+            }
+  
+            break;
+
+        default:
+            break;
+        }
+
+    }
+
+    
+
+    //RenderText(L"开始游戏", (float)1280/2 - 100, (float)720/2, 1.0f, glm::vec3(1.0, 1.0f, 1.0f));
+    RenderText(L"退出", (float)(640 - 30 - 90), (float)(480 - 450), 1.0f, glm::vec3(1.0, 1.0f, 1.0f));
 
     return 0;
 
+}
+
+bool Graphics::IsDown(SDL_Rect rectt)
+{
+    int x = event.button.x;
+    int y = event.button.y;
+
+    return x >= rectt.x && x <= rectt.x + rectt.w &&
+        y >= rectt.y && y <= rectt.y + rectt.h;
 }

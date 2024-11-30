@@ -20,6 +20,9 @@ public:
 	int Draw();
 
 	void RenderText( std::wstring text, GLfloat x, GLfloat y, GLfloat scale, glm::vec3 color);
+	bool IsDown(SDL_Rect rectt);
+
+	bool run = true;
 
 private:
 	GLuint VAO, VBO,EBO,texture;
@@ -35,6 +38,13 @@ private:
 	};
 
 	std::map<GLchar, Character> Characters;
+
+	FT_Library ft;
+	FT_Face face;
+
+	HWND hh;
+
+	SDL_Event event;
 
 };
 
