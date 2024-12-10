@@ -21,6 +21,7 @@ ShaderFromSource::~ShaderFromSource()
 {
     glDeleteShader(VertexShader);
     glDeleteShader(FragmentShader);
+    glDeleteProgram(ShaderProgram);
 }
 
 void ShaderFromSource::Use()
@@ -70,6 +71,7 @@ ShaderFromFile::~ShaderFromFile()
 {
     glDeleteShader(VertexShader);
     glDeleteShader(FragmentShader);
+    glDeleteProgram(ShaderProgram);
 }
 
 void ShaderFromFile::Use()

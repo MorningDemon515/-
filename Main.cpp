@@ -30,29 +30,12 @@ int main()
 
 	Graphics* gx = new Graphics(hwnd);
 
-	SDL_Event event;
-	bool run = true;
-
-	while (run)
+	while (gx->run)
 	{
 
 		gx->Draw();
 
 		SDL_GL_SwapWindow(window);
-
-		while (SDL_PollEvent(&event))
-		{
-			switch (event.type)
-			{
-			case SDL_QUIT:
-				run = false;
-				break;
-
-			default:
-				break;
-			}
-
-		}
 
 	}
 
